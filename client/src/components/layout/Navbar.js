@@ -24,7 +24,7 @@ const Navbar = ({ title, icon }) => {
   const authLinks = (
     <Fragment>
       <li>
-        <Link to='/import'>Import</Link>
+        <Link to='/StyledDropzone'>Import</Link>
       </li>
       <li>
         <Link to='/sales'>Sales</Link>

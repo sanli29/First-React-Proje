@@ -67,6 +67,13 @@ export default function Sales() {
 
     return (
         <div>
+            <input
+                type="file"
+                onChange={(e) => {
+                    const file = e.target.files[0];
+                    readCSV(file);
+                }}
+            />
             <MTable data={items} columns={columns} tprops={salesTableProps} />
         </div>
     )
