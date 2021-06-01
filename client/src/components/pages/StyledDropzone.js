@@ -1,5 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback, useContext } from 'react';
 import { useDropzone } from 'react-dropzone';
+import FileContext from '../../context/file/fileContext';
+
 
 const baseStyle = {
     flex: 1,
@@ -30,13 +32,31 @@ const rejectStyle = {
 };
 
 function StyledDropzone(props) {
+
+    const fileContext = useContext(FileContext);
+    const { importFile, err, file } = fileContext;
+
+    const onDrop = useCallback(acceptedFiles => {
+        console.log('dosya burda');
+        console.log(acceptedFiles);
+        const file = acceptedFiles[0];
+        importFile({
+            name: file.path,
+            extention: file.type,
+            data: [{
+                sale: 'emre'
+            }]
+        });
+        console.log(err);
+    }, [])
+
     const {
         getRootProps,
         getInputProps,
         isDragActive,
         isDragAccept,
         isDragReject
-    } = useDropzone({ accept: 'image/*' });
+    } = useDropzone({ accept: '.csv, application/vnd.ms-excel, text/csv', onDrop });
 
     const style = useMemo(() => ({
         ...baseStyle,

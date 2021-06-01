@@ -97,7 +97,7 @@ const generateJWT = payload => {
             payload,
             config.get('jwtSecret'),
             {
-                expiresIn: 300 //3600 sec = 1 hour    //360000 = longer is better for development
+                expiresIn: 3600 //3600 sec = 1 hour    //360000 = longer is better for development
             },
             (err, token) => {
                 if (!err) resolve(token);

@@ -12,15 +12,16 @@ const FileSchema = mongoose.Schema({
     data: {
         type: [
             {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'sale'
+                type: Object
+                //type: mongoose.Schema.Types.ObjectId,
+                //ref: 'sale'
             }
         ],
         required: true
     },
     columns: {
         type: Object,
-        required: true
+        //required: true
     },
     type: {
         type: String // import edilen dosya, resim

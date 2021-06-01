@@ -6,8 +6,12 @@ import Import from './components/pages/import';
 import Sales from './components/pages/sales';
 import Login from './components/auth/Login';
 import Alerts from './components/layout/Alerts';
+
 import AuthState from './context/auth/AuthState';
 import AlertState from './context/alert/AlertState';
+
+import FileState from './context/file/FileState';
+
 import PrivateRoute from './components/routing/PrivateRoute';
 import StyledDropzone from './components/pages/StyledDropzone';
 
@@ -45,7 +49,9 @@ function App() {
               <Switch>
                 <PrivateRoute exact path='/' component={Sales} />
                 <Route exact path='/login' component={Login} />
-                <Route exact path='/StyledDropzone' component={StyledDropzone} />
+                <FileState>
+                  <Route exact path='/StyledDropzone' component={StyledDropzone} />
+                </FileState>
                 <PrivateRoute path='/Import' component={Import} />
                 <PrivateRoute path='/sales' component={Sales} />
                 <Route exact component={NotFound} />
