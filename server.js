@@ -1,5 +1,5 @@
 const express = require('express');
-const { connectMongoDB } = require('./config/DB');
+const { connectMongoDB } = require('./config/db');
 const chalk = require('chalk');
 
 const path = require('path');
