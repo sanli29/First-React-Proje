@@ -6,7 +6,8 @@ import fileReducer from './fileReducer';
 import {
     IMPORT_FILE,
     IMPORT_SUCCESS,
-    IMPORT_FAIL
+    IMPORT_FAIL,
+    CLEAR_ERRORS
 } from '../types';
 
 const FileState = props => {
@@ -28,6 +29,8 @@ const FileState = props => {
         try {
             const res = await axios.post('/api/files', fileData, config);
 
+            console.log('res data->', res.data);
+
             dispatch({
                 type: IMPORT_SUCCESS,
                 payload: res.data
@@ -41,12 +44,16 @@ const FileState = props => {
         }
     };
 
+    // Clear Errors
+    const clearErrors = () => dispatch({ type: CLEAR_ERRORS });
+
     return (
         <FileContext.Provider
             value={{
                 file: state.file,
                 err: state.err,
-                importFile
+                importFile,
+                clearErrors
             }}
         >
             {props.children}

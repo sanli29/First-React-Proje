@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 import './App.css';
 import Navbar from './components/layout/Navbar';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Import from './components/pages/import';
 import Sales from './components/pages/sales';
 import Login from './components/auth/Login';
 import Alerts from './components/layout/Alerts';
@@ -52,7 +51,6 @@ function App() {
                 <FileState>
                   <Route exact path='/StyledDropzone' component={StyledDropzone} />
                 </FileState>
-                <PrivateRoute path='/Import' component={Import} />
                 <PrivateRoute path='/sales' component={Sales} />
                 <Route exact component={NotFound} />
               </Switch>
