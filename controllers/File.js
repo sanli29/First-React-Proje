@@ -1,5 +1,7 @@
+const c = require('config');
 const { newData, fillData } = require('../helpers/schemaFiller');
 const File = require('../models/File');
+const { newSale } = require('./Sale');
 
 const getFiles = () => {
     return new Promise(async (resolve, reject) => {
@@ -21,12 +23,30 @@ const newFile = data => {
         try {
             let file = await File.findOne({ name: data.name });
             if (!file) {
-                const { object, objectKeys } = await newData(new File());
-                await fillData(object, objectKeys, data);
-                await object.save();
 
-                resolve(object);
-            } else return reject({ err: true, msg: 'File already exists' });
+                const newFile = new File();
+                newFile.name = data.name;
+                newFile.extention = data.extention;
+
+                const sales = [];
+                for (let sale of data.data) {
+                    let saleObject = await newSale(sale);
+                    sales.push(saleObject._id);
+                }
+                newFile.data = sales;
+
+                await newFile.save();
+
+                /* const { object, objectKeys } = await newData(new File());
+                 await fillData(object, objectKeys, data);
+                 console.log('furkandata', data);
+                 object.data = data.data;
+                 console.log('furkan', object);
+                 await object.save();
+                 */
+
+                resolve(newFile);
+            } else return reject({ err: true, msg: 'File already exists : ' + data.name });
         } catch (err) {
             reject(err);
         }

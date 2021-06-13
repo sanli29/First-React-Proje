@@ -7,8 +7,6 @@
   padding: 0;
 }
 
-@import url('https://fonts.googleapis.com/css?family=Roboto');
-
 /* Global Styles */
 :root {
   --primary-color: #003699;
@@ -19,7 +17,7 @@
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  
   font-size: 1rem;
   line-height: 1.6;
   background-color: #fff;
@@ -45,7 +43,6 @@ img {
 
 /* Utilities */
 .container {
-  max-width: 1100px;
   margin: auto;
   overflow: hidden;
   padding: 0 2rem;

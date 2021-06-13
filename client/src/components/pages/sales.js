@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import MTable from '../ui/MTable';
-import { csv } from "csvtojson";
-import { makeStyles, useTheme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
+
+import AlertContext from '../../context/alert/alertContext';
+import SaleContext from '../../context/sale/saleContext';
 
 const useStyles = makeStyles(theme => ({
     page: {
@@ -12,43 +14,17 @@ const useStyles = makeStyles(theme => ({
 export default function Sales() {
 
     const classes = useStyles();
-    const theme = useTheme();
+    const alertContext = useContext(AlertContext);
+    const { setAlert } = alertContext;
+    const saleContext = useContext(SaleContext);
+    const { err, sales, clearErrors, GetSales, loading } = saleContext;
 
-    const [items, setItems] = useState([]);
     const [columns, setColumns] = useState([]);
+    useEffect(() => {
 
-    const readCSV = async (file) => {
-        let text = await file.text();
-        text = text.replace('Invoice Details', "");
-        let rows = text.split('\n');
-        rows.shift();
-        rows.shift();
+        GetSales()
 
-        let txt = '';
-
-        for (let row of rows) {
-            txt += row;
-        }
-
-        const jsonArray = await csv({
-            header: true,
-            trim: true
-        }).fromString(txt);
-
-        const columnKeys = Object.keys(jsonArray[0]);
-        columnKeys.pop();
-        const columns = [];
-
-        for (let columnKey of columnKeys) {
-            columns.push({
-                title: columnKey,
-                field: columnKey,
-                validate: rowData => rowData[columnKey] === '' ? { isValid: false, helperText: `${columnKey} boş bırakılamaz` } : true
-            })
-        }
-        setColumns(columns);
-        setItems(jsonArray);
-    }
+    }, [])
 
     const salesTableProps = {
         title: 'Sales',
@@ -67,7 +43,82 @@ export default function Sales() {
 
     return (
         <div>
-            <MTable data={items} columns={columns} tprops={salesTableProps} />
+            <MTable data={sales ? sales : []} columns={[
+                {
+                    title: 'PO #',
+                    field: 'PO #'
+                },
+                {
+                    title: 'External ID',
+                    field: 'External ID'
+                },
+                {
+                    title: 'Title',
+                    field: 'Title',
+                    cellStyle: {
+                        minWidth: '35rem',
+                    },
+                    headerStyle: {
+                        minWidth: '35rem',
+                    }
+                },
+                {
+                    title: 'ASIN',
+                    field: 'ASIN'
+                },
+                {
+                    title: 'Model #',
+                    field: 'Model #'
+                },
+                {
+                    title: 'Freight Term',
+                    field: 'Freight Term'
+                },
+                {
+                    title: 'Qty',
+                    field: 'Qty'
+                },
+                {
+                    title: 'Unit Cost',
+                    field: 'Unit Cost'
+                },
+                {
+                    title: 'Amount',
+                    field: 'Amount'
+                },
+                {
+                    title: 'Shortage quantity',
+                    field: 'Shortage quantity'
+                },
+                {
+                    title: 'Amount shortage',
+                    field: 'Amount shortage'
+                },
+                {
+                    title: 'Last received date',
+                    field: 'Last received date'
+                },
+                {
+                    title: 'ASIN received',
+                    field: 'ASIN received'
+                },
+                {
+                    title: 'Quantity received',
+                    field: 'Quantity received'
+                },
+                {
+                    title: 'ASIN received',
+                    field: 'ASIN received'
+                },
+                {
+                    title: 'Unit cost',
+                    field: 'Unit cost'
+                },
+                {
+                    title: 'Amount received',
+                    field: 'Amount received'
+                }
+            ]} tprops={salesTableProps} />
         </div>
     )
 }

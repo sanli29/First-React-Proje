@@ -24,7 +24,6 @@ router.post('/', [auth, [
     check('name', 'Please add name').not().isEmpty(),
     check('extention', 'Please add extention').not().isEmpty(),
     check('data', 'Please add data').not().isEmpty()]
-    //check('columns', 'Please add columns').not().isEmpty(),
 ], async (req, res) => {
 
     console.log(req.body);

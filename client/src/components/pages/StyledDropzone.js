@@ -39,10 +39,6 @@ function StyledDropzone(props) {
     const { setAlert } = alertContext;
     const fileContext = useContext(FileContext);
     const { importFile, file, err, clearErrors } = fileContext;
-
-    const [items, setItems] = useState([]);
-    const [columns, setColumns] = useState([]);
-
     useEffect(() => {
         if (!err && file)
             setAlert('Imported successfully.', 'success');
@@ -52,19 +48,19 @@ function StyledDropzone(props) {
     }, [err, file])
 
 
-    const onDrop = useCallback(acceptedFiles => {
+    const onDrop = useCallback(async (acceptedFiles) => {
         console.log('dosya burda');
         console.log(acceptedFiles);
         const file = acceptedFiles[0];
-        /*
+        const sales = await readCSV(file);
+
         importFile({
             name: file.path,
             extention: file.type,
-            data: [{
-                sale: 'emre'
-            }]
+            data: sales
         });
-        */
+
+        console.log(sales);
         console.log(err);
     }, [])
 
@@ -88,36 +84,37 @@ function StyledDropzone(props) {
     ]);
 
     const readCSV = async (file) => {
-        let text = await file.text();
-        text = text.replace('Invoice Details', "");
-        let rows = text.split('\n');
-        rows.shift();
-        rows.shift();
+        return new Promise(async (resolve, reject) => {
+            let text = await file.text();
+            text = text.replace('Invoice Details', "");
+            let rows = text.split('\n');
+            rows.shift();
+            rows.shift();
 
-        let txt = '';
+            let txt = '';
 
-        for (let row of rows) {
-            txt += row;
-        }
+            for (let row of rows) {
+                txt += row;
+            }
 
-        const jsonArray = await csv({
-            header: true,
-            trim: true
-        }).fromString(txt);
+            const jsonArray = await csv({
+                header: true,
+                trim: true
+            }).fromString(txt);
 
-        const columnKeys = Object.keys(jsonArray[0]);
-        columnKeys.pop();
-        const columns = [];
+            const columnKeys = Object.keys(jsonArray[0]);
+            columnKeys.pop();
+            const columns = [];
 
-        for (let columnKey of columnKeys) {
-            columns.push({
-                title: columnKey,
-                field: columnKey,
-                validate: rowData => rowData[columnKey] === '' ? { isValid: false, helperText: `${columnKey} boş bırakılamaz` } : true
-            })
-        }
-        setColumns(columns);
-        setItems(jsonArray);
+            for (let columnKey of columnKeys) {
+                columns.push({
+                    title: columnKey,
+                    field: columnKey,
+                    validate: rowData => rowData[columnKey] === '' ? { isValid: false, helperText: `${columnKey} can not be empty` } : true
+                })
+            }
+            resolve(jsonArray);
+        });
     }
 
     return (

@@ -10,6 +10,7 @@ import AuthState from './context/auth/AuthState';
 import AlertState from './context/alert/AlertState';
 
 import FileState from './context/file/FileState';
+import SaleState from './context/sale/SaleState';
 
 import PrivateRoute from './components/routing/PrivateRoute';
 import StyledDropzone from './components/pages/StyledDropzone';
@@ -40,23 +41,27 @@ function App() {
   return (
     <AuthState>
       <AlertState>
-        <Router>
-          <Fragment>
-            <Navbar />
-            <div className='container'>
-              <Alerts />
-              <Switch>
-                <PrivateRoute exact path='/' component={Sales} />
-                <Route exact path='/login' component={Login} />
-                <FileState>
-                  <Route exact path='/StyledDropzone' component={StyledDropzone} />
-                </FileState>
-                <PrivateRoute path='/sales' component={Sales} />
-                <Route exact component={NotFound} />
-              </Switch>
-            </div>
-          </Fragment>
-        </Router>
+        <FileState>
+          <SaleState>
+            <Router>
+              <Fragment>
+                <Navbar />
+                <div className='container'>
+                  <Alerts />
+                  <Switch>
+                    <Route exact path='/login' component={Login} />
+
+                    <PrivateRoute exact path='/sales' component={Sales} />
+                    <PrivateRoute exact path='/StyledDropzone' component={StyledDropzone} />
+
+
+                    <Route exact component={NotFound} />
+                  </Switch>
+                </div>
+              </Fragment>
+            </Router>
+          </SaleState>
+        </FileState>
       </AlertState>
     </AuthState>
   );

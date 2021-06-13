@@ -24,3 +24,7 @@ export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const IMPORT_FILE = 'IMPORT_FILE';
 export const IMPORT_SUCCESS = 'IMPORT_SUCCESS';
 export const IMPORT_FAIL = 'IMPORT_FAIL';
+//  Sale
+export const GET_SALES = 'GET_SALES';
+export const ERROR_SALES = 'ERROR_SALES';
+

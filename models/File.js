@@ -9,16 +9,11 @@ const FileSchema = mongoose.Schema({
         type: String, // dosya uzantısı,
         required: true
     },
-    data: {
-        type: [
-            {
-                type: Object
-                //type: mongoose.Schema.Types.ObjectId,
-                //ref: 'sale'
-            }
-        ],
+    data: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'sale',
         required: true
-    },
+    }],
     columns: {
         type: Object,
         //required: true
