@@ -19,6 +19,11 @@ import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 
+
+
+import selectedSales from '../pages/sales';
+import { CsvBuilder } from 'filefy';
+
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
   Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -39,70 +44,55 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
 
-const localization = {
-  tr: {
-    body: {
-      emptyDataSourceMessage: 'Gösterilecek kayıt yok',
-      addTooltip: 'Yeni kayıt ekle',
-      deleteTooltip: 'Kaydı sil',
-      editTooltip: 'Kaydı düzenle',
-      filterRow: {
-        filterPlaceHolder: '',
-        filterTooltip: 'Filtre'
-      },
-      editRow: {
-        deleteText: 'Bu satırı silmek istediğinizden emin misiniz?',
-        cancelTooltip: 'İptal',
-        saveTooltip: 'Kaydet'
-      }
-    },
-    grouping: {
-      placeholder: 'Gruplamak istediğiniz sütunları buraya sürükleyin',
-      groupedBy: 'Gruplanan Sütunlar: '
-    },
-    header: {
-      actions: 'İşlemler'
-    },
-    toolbar: {
-      addRemoveColumns: 'Sütun ekle veya sil',
-      nRowsSelected: '{0} tane sütun seçildi',
-      showColumnsTitle: 'Sütunları göster',
-      showColumnsAriaLabel: 'Sütunları göster',
-      exportTitle: 'Dışa aktar',
-      exportAriaLabel: 'Dışa Aktar',
-      exportCSVName: 'CSV olarak dışa aktar',
-      exportPDFName: 'PDF olarak dışa aktar',
-      searchTooltip: 'Arama',
-      searchPlaceholder: 'Ara'
-    },
-    pagination: {
-      labelDisplayedRows: '{count} satırdan {from}-{to} arası',
-      labelRowsSelect: 'satır',
-      labelRowsPerPage: 'Her sayfa için satır sayısı',
-      firstAriaLabel: 'İlk Sayfa',
-      firstTooltip: 'İlk Sayfa',
-      previousAriaLabel: 'Önceki Sayfa',
-      previousTooltip: 'Önceki Sayfa',
-      nextAriaLabel: 'Sonraki Sayfa',
-      nextTooltip: 'Sonraki Sayfa',
-      lastAriaLabel: 'Son Sayfa',
-      lastTooltip: 'Son Sayfa'
-    }
-  }
-};
+const formatSelectedData = (selectedData, columns) => {
+  return selectedData.map((data) => {
+    let dataKeys = Object.keys(data);
+    let newData = [];
+    columns.map((column) => {
+      if (dataKeys.includes(column.field))
+        newData.push(data[`${column.field}`]);
+    })
+    return newData;
+  })
+}
 
-export default function MTable({ data, columns, tprops }) {
+
+
+
+
+
+export default function MTable({ data, selectedData, columns, tprops }) {
+
+  const exportAllSelectedRows = () => {
+    new CsvBuilder(`Selected ${tprops.title} Rows File.csv`)
+      .setColumns(columns.map((column) => column.field))
+      .addRows(formatSelectedData(selectedData, columns))
+      .exportFile();
+
+  }
+
+
   return (
+
+
     <MaterialTable
       title={tprops.title}
       columns={columns}
       data={data}
-      actions={tprops.actions}
-
+      actions={[
+        {
+          icon: () => <SaveAlt />,
+          tooltip: "Export all selected rows",
+          onClick: () => exportAllSelectedRows()
+        }
+      ]}
       editable={tprops.editable}
       options={tprops.options}
+      onRowClick={tprops.onRowClick}
       onSelectionChange={tprops.onSelectionChange}
       icons={tableIcons}
     />
+
+
   );
 }

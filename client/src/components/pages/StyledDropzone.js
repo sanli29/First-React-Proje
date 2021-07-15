@@ -49,8 +49,7 @@ function StyledDropzone(props) {
 
 
     const onDrop = useCallback(async (acceptedFiles) => {
-        console.log('dosya burda');
-        console.log(acceptedFiles);
+
         const file = acceptedFiles[0];
         const sales = await readCSV(file);
 
@@ -60,8 +59,6 @@ function StyledDropzone(props) {
             data: sales
         });
 
-        console.log(sales);
-        console.log(err);
     }, [])
 
     const {

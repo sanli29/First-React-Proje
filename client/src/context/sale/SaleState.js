@@ -22,8 +22,6 @@ const SaleState = props => {
         try {
             const res = await axios.get('/api/sales');
 
-            console.log('res data->', res.data);
-
             dispatch({
                 type: GET_SALES,
                 payload: res.data

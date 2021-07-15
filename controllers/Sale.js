@@ -7,6 +7,7 @@ const getSales = () => {
         try {
 
             const sales = await Sale.find({}).limit(1000);
+
             resolve(sales);
 
         } catch (err) {

@@ -37,14 +37,6 @@ const newFile = data => {
 
                 await newFile.save();
 
-                /* const { object, objectKeys } = await newData(new File());
-                 await fillData(object, objectKeys, data);
-                 console.log('furkandata', data);
-                 object.data = data.data;
-                 console.log('furkan', object);
-                 await object.save();
-                 */
-
                 resolve(newFile);
             } else return reject({ err: true, msg: 'File already exists : ' + data.name });
         } catch (err) {
