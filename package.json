@@ -14,8 +14,8 @@
     "mongoose": "^5.12.12"
   },
   "devDependencies": {
-    "nodemon": "^2.0.7",
-    "concurrently": "^6.2.0"
+    "concurrently": "^6.2.0",
+    "nodemon": "^2.0.7"
   },
   "scripts": {
     "start": "node server.js",
