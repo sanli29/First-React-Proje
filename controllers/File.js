@@ -38,9 +38,9 @@ const newFile = data => {
                 await newFile.save();
 
                 resolve(newFile);
-            } else return reject({ err: true, msg: 'File already exists : ' + data.name });
+            } else reject({ err: true, status: 400, msg: 'File already exists : ' + data.name });
         } catch (err) {
-            reject(err);
+            reject({ err: true, status: 500, msg: 'Server Error', result: err });
         }
     });
 };

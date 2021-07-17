@@ -12,6 +12,7 @@ const SaleState = props => {
         sales: null,
         err: null,
         loading: true,
+        message: null
     };
 
     const [state, dispatch] = useReducer(saleReducer, initialState);
@@ -42,6 +43,7 @@ const SaleState = props => {
             value={{
                 sales: state.sales,
                 err: state.err,
+                message: state.message,
                 clearErrors,
                 GetSales,
                 loading: state.loading,

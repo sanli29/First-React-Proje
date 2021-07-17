@@ -20,6 +20,7 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGOUT = 'LOGOUT';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
+export const CLEAR_MESSAGES = 'CLEAR_MESSAGES';
 //  File
 export const IMPORT_FILE = 'IMPORT_FILE';
 export const IMPORT_SUCCESS = 'IMPORT_SUCCESS';
@@ -27,4 +28,7 @@ export const IMPORT_FAIL = 'IMPORT_FAIL';
 //  Sale
 export const GET_SALES = 'GET_SALES';
 export const ERROR_SALES = 'ERROR_SALES';
+//  Message
+export const SET_MESSAGE = 'SET_MESSAGE';
+export const REMOVE_MESSAGE = 'REMOVE_MESSAGE';
 

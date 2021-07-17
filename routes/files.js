@@ -45,12 +45,9 @@ router.post('/', [auth, [
             res.json(file);
 
         } catch (err) {
-            console.log("HATAYI YAZIYO");
-            console.log(err);
-            console.error(err.message);
-            res.status(500).send('Server error');
+            res.status(err.status).json(err);
         }
-    } else return res.status(400).json({ err: true, errors: errors.array() });
+    } else return res.status(400).json({ err: true, errors: errors.array(), msg: 'Unvalid Parameters.' });
 });
 
 module.exports = router;

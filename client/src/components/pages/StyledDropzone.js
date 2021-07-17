@@ -4,6 +4,7 @@ import { csv } from "csvtojson";
 
 import AlertContext from '../../context/alert/alertContext';
 import FileContext from '../../context/file/fileContext';
+import MessageContext from '../../context/message/messageContext';
 
 
 const baseStyle = {
@@ -37,26 +38,42 @@ const rejectStyle = {
 function StyledDropzone(props) {
     const alertContext = useContext(AlertContext);
     const { setAlert } = alertContext;
+
     const fileContext = useContext(FileContext);
-    const { importFile, file, err, clearErrors } = fileContext;
+    const { importFile, file, err, messages, clearErrors } = fileContext;
+
+    const messageContext = useContext(MessageContext);
+    const { setMessage } = messageContext;
     useEffect(() => {
-        if (!err && file)
-            setAlert('Imported successfully.', 'success');
-        else if (err)
-            setAlert(err, 'danger');
-        clearErrors();
-    }, [err, file])
+        if (fileContext.message) {
+            setMessage(fileContext.message.content, fileContext.message.type);
+            fileContext.clearErrors();
+        }
+    }, [fileContext.message]);
 
 
     const onDrop = useCallback(async (acceptedFiles) => {
 
-        const file = acceptedFiles[0];
-        const sales = await readCSV(file);
+        const files = acceptedFiles;
 
-        importFile({
-            name: file.path,
-            extention: file.type,
-            data: sales
+        for (let file of files) {
+            const sales = await readCSV(file);
+            console.log(sales);
+            importFile({
+                name: file.path,
+                extention: file.type,
+                data: sales
+            });
+        }
+
+
+        const getSentenceFragment = (offset = 0) => new Promise((resolve, reject) => {
+            const pageSize = 3;
+            const sentence = [...'hello world'];
+            setTimeout(() => resolve({
+                data: sentence.slice(offset, offset + pageSize),
+                nextPage: offset + pageSize < sentence.length ? offset + pageSize : undefined
+            }), 500);
         });
 
     }, [])
@@ -82,35 +99,52 @@ function StyledDropzone(props) {
 
     const readCSV = async (file) => {
         return new Promise(async (resolve, reject) => {
-            let text = await file.text();
-            text = text.replace('Invoice Details', "");
-            let rows = text.split('\n');
-            rows.shift();
-            rows.shift();
+            try {
+                let text = await file.text();
+                text = text.replace('Invoice Details', "");
+                let rows = text.split('\n');
+                rows.shift();
+                rows.shift();
 
-            let txt = '';
 
-            for (let row of rows) {
-                txt += row;
+                let txt = '';
+
+                for (let row of rows) {
+                    txt += row;
+                }
+
+                const jsonArray = await csv({
+                    header: true,
+                    trim: true
+                }).fromString(txt);
+
+                let requiredColumns = ['PO #', 'External ID', 'Title', 'ASIN',
+                    'Model #', 'Freight Term', 'Qty', 'Unit Cost',
+                    'Amount', 'Shortage quantity', 'Amount shortage',
+                    'Last received date', 'ASIN received', 'Quantity received',
+                    'Unit cost', 'Amount received']
+                const columnKeys = Object.keys(jsonArray[0]);
+                columnKeys.pop();
+
+                if (JSON.stringify(requiredColumns) == JSON.stringify(columnKeys)) {
+
+
+
+                    console.log(requiredColumns);
+                    const columns = [];
+
+                    for (let columnKey of columnKeys) {
+                        columns.push({
+                            title: columnKey,
+                            field: columnKey,
+                            validate: rowData => rowData[columnKey] === '' ? { isValid: false, helperText: `${columnKey} can not be empty` } : true
+                        })
+                    }
+                    resolve(jsonArray);
+                } else setMessage('Error file!', 'error');
+            } catch (err) {
+                setMessage('Error occured while file is uploading.', 'error', Math.floor(Date.now() / 1000));
             }
-
-            const jsonArray = await csv({
-                header: true,
-                trim: true
-            }).fromString(txt);
-
-            const columnKeys = Object.keys(jsonArray[0]);
-            columnKeys.pop();
-            const columns = [];
-
-            for (let columnKey of columnKeys) {
-                columns.push({
-                    title: columnKey,
-                    field: columnKey,
-                    validate: rowData => rowData[columnKey] === '' ? { isValid: false, helperText: `${columnKey} can not be empty` } : true
-                })
-            }
-            resolve(jsonArray);
         });
     }
 
