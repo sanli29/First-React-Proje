@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import MaterialTable from 'material-table';
+import MaterialTable, { MTablePagination } from 'material-table'
 import { MTableEditField } from 'material-table';
 import AutoComplete from '@material-ui/lab/Autocomplete';
 
@@ -88,6 +88,7 @@ export default function MTable({ data, selectedData, columns, tprops }) {
       ]}
       editable={tprops.editable}
       options={tprops.options}
+      components={tprops.components}
       onRowClick={tprops.onRowClick}
       onSelectionChange={tprops.onSelectionChange}
       icons={tableIcons}

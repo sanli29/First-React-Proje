@@ -5,7 +5,9 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import AlertContext from '../../context/alert/alertContext';
 import SaleContext from '../../context/sale/saleContext';
-import { MuiThemeProvider, createMuiTheme, FormControlLabel, Switch } from '@material-ui/core';
+import { TablePagination, Grid, Typography, Divider, MuiThemeProvider, createMuiTheme, FormControlLabel, Switch } from '@material-ui/core';
+
+
 
 const useStyles = makeStyles(theme => ({
   page: {
@@ -36,6 +38,20 @@ export default function Sales() {
       selection: true,
       sorting: true,
       columnsButton: true
+    },
+    components: {
+      Pagination: (props) => <>
+        <Grid container style={{ padding: 15 }}>
+          <Grid sm={2} item align="center"><Typography variant="subtitle2" ><b>Qty : {summary.qty}</b></Typography></Grid>
+          <Grid sm={2} item align="center"><Typography variant="subtitle2" ><b>ReceivedQty : {summary.receivedQty}</b></Typography></Grid>
+          <Grid sm={2} item align="center"><Typography variant="subtitle2" ><b>UnitCost : {summary.unitCost}</b></Typography></Grid>
+          <Grid sm={2} item align="center"><Typography variant="subtitle2" ><b>ReceivedUnitCost : {summary.receivedUnitCost}</b></Typography></Grid>
+          <Grid sm={2} item align="center"><Typography variant="subtitle2" ><b>Amount : {summary.amount}</b></Typography></Grid>
+          <Grid sm={2} item align="center"><Typography variant="subtitle2" ><b>ReceivedAmount : {summary.receivedAmount}</b></Typography></Grid>
+        </Grid>
+        <Divider />
+        <TablePagination {...props} />
+      </>
     },
     onSelectionChange: rows => {
       console.log(this);
@@ -199,12 +215,6 @@ export default function Sales() {
       <button className="button button1" onClick={summarize}>
         Calculate
       </button>
-      <h1>Sum Qty is {summary.qty}</h1>
-      <h1>Sum ReceivedQty is {summary.receivedQty}</h1>
-      <h1>Sum UnitCost is {summary.unitCost}</h1>
-      <h1>Sum ReceivedUnitCost is {summary.receivedUnitCost}</h1>
-      <h1>Sum Amount is {summary.amount}</h1>
-      <h1>Sum ReceivedAmount is {summary.receivedAmount}</h1>
     </div>
   );
 }
