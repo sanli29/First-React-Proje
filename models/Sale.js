@@ -1,3 +1,4 @@
+const { date } = require('date-fns/locale/af');
 const mongoose = require('mongoose');
 
 const SaleSchema = mongoose.Schema({
@@ -46,7 +47,7 @@ const SaleSchema = mongoose.Schema({
         required: false
     },
     'Last received date': {
-        type: String,
+        type: Date,
         required: false
     },
     'ASIN received': {

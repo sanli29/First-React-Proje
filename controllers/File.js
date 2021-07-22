@@ -7,7 +7,7 @@ const getFiles = () => {
     return new Promise(async (resolve, reject) => {
         try {
 
-            const files = await File.findOne({}).limit(1000);
+            const files = await File.findOne({});
             resolve(files);
 
         } catch (err) {
@@ -30,6 +30,7 @@ const newFile = data => {
 
                 const sales = [];
                 for (let sale of data.data) {
+
                     let saleObject = await newSale(sale);
                     sales.push(saleObject._id);
                 }

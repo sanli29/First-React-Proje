@@ -2,10 +2,20 @@ import React, { useState, useEffect, useCallback, useContext } from 'react';
 import MTable from '../ui/MTable';
 
 import { makeStyles } from '@material-ui/core/styles';
+import { useLocation } from 'react-router-dom';
 
 import AlertContext from '../../context/alert/alertContext';
 import SaleContext from '../../context/sale/saleContext';
 import { TablePagination, Grid, Typography, Divider, MuiThemeProvider, createMuiTheme, FormControlLabel, Switch } from '@material-ui/core';
+
+import 'date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+
 
 
 
@@ -21,11 +31,23 @@ export default function Sales() {
   const { setAlert } = alertContext;
   const saleContext = useContext(SaleContext);
   const { err, sales, clearErrors, GetSales, loading } = saleContext;
+  const { search } = useLocation();
+  const urlQuery = new URLSearchParams(search);
+  console.log('OV YEA', urlQuery.get('sa'));
+
+  const [selectedDateFrom, setSelectedDateFrom] = React.useState(new Date('2014-08-18T21:11:54'));
+  const [selectedDateTo, setSelectedDateTo] = React.useState(new Date());
+
 
   const [columns, setColumns] = useState([]);
   useEffect(() => {
-    GetSales();
-  }, []);
+    GetSales({
+      'Last received date': {
+        gte: selectedDateFrom,
+        lt: selectedDateTo
+      }
+    });
+  }, [selectedDateFrom, selectedDateTo]);
 
   const [selectedSales, setSelectedSales] = useState([]);
 
@@ -119,8 +141,40 @@ export default function Sales() {
     calcSummary();
   };
 
+
+
   return (
     <div>
+
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <Grid container justifyContent="space-around">
+          <KeyboardDatePicker
+            margin="normal"
+            id="date-picker-dialog"
+            label="Date picker dialog"
+            format="dd/MM/yyyy"
+            value={selectedDateFrom}
+            onChange={(date) => setSelectedDateFrom(date)}
+            KeyboardButtonProps={{
+              'aria-label': 'change date',
+            }}
+          />
+          <KeyboardDatePicker
+            margin="normal"
+            id="date-picker-dialog"
+            label="Date picker dialog"
+            format="dd/MM/yyyy"
+            value={selectedDateTo}
+            onChange={(date) => setSelectedDateTo(date)}
+            KeyboardButtonProps={{
+              'aria-label': 'change date',
+            }}
+          />
+        </Grid>
+      </MuiPickersUtilsProvider>
+
+
+
       <FormControlLabel
         value="top"
         control={<Switch color="primary" checked={preferDarkMode} />}
@@ -215,6 +269,8 @@ export default function Sales() {
       <button className="button button1" onClick={summarize}>
         Calculate
       </button>
+
+
     </div>
   );
 }

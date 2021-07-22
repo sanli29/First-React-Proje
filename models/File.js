@@ -19,7 +19,7 @@ const FileSchema = mongoose.Schema({
         //required: true
     },
     type: {
-        type: String // import edilen dosya, resim
+        type: String
     },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,

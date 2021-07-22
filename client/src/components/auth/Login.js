@@ -2,7 +2,30 @@ import React, { useState, useContext, useEffect } from 'react';
 import AuthContext from '../../context/auth/authContext';
 import AlertContext from '../../context/alert/alertContext';
 
+import { makeStyles } from '@material-ui/core/styles';
+
+
+const useStyles = makeStyles((theme) => ({
+  'input': {
+    margin: '1.2rem',
+    display: 'block',
+    width: '100%',
+    padding: '0.4rem',
+    fontSize: '1.2rem',
+    borderColor: '#ccc',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    border: '1px solid #ccc'
+  },
+  'form-text': {
+    display: 'block',
+    marginTop: '0.3rem',
+    color: '#888'
+  }
+}));
+
 const Login = props => {
+  const classes = useStyles();
   const alertContext = useContext(AlertContext);
   const authContext = useContext(AuthContext);
 
@@ -51,6 +74,7 @@ const Login = props => {
         <div className='form-group'>
           <label htmlFor='email'>Email Address</label>
           <input
+            className={classes.input}
             id='email'
             type='email'
             name='email'
@@ -62,6 +86,7 @@ const Login = props => {
         <div className='form-group'>
           <label htmlFor='password'>Password</label>
           <input
+            className={classes.input}
             id='password'
             type='password'
             name='password'

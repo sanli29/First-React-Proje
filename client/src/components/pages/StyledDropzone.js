@@ -118,6 +118,14 @@ function StyledDropzone(props) {
                     trim: true
                 }).fromString(txt);
 
+                await jsonArray.map((row) => {
+                    console.log(row);
+                    let splittedValues = row['Last received date'].split('/');
+                    let date = new Date(`${splittedValues[2]}-${splittedValues[1]}-${splittedValues[0]}`);
+                    row['Last received date'] = date;
+                    return row;
+                });
+
                 let requiredColumns = ['PO #', 'External ID', 'Title', 'ASIN',
                     'Model #', 'Freight Term', 'Qty', 'Unit Cost',
                     'Amount', 'Shortage quantity', 'Amount shortage',

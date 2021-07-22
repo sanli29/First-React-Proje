@@ -18,7 +18,7 @@ const SaleState = props => {
     const [state, dispatch] = useReducer(saleReducer, initialState);
 
     // Get Sales
-    const GetSales = async () => {
+    const GetSales = async (query) => {
 
         try {
             const res = await axios.get('/api/sales');
