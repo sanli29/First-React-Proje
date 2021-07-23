@@ -1,7 +1,8 @@
 import { forwardRef } from 'react';
-import MaterialTable, { MTablePagination } from 'material-table'
+import MaterialTable, { MTablePagination } from 'material-table';
 import { MTableEditField } from 'material-table';
 import AutoComplete from '@material-ui/lab/Autocomplete';
+import { Table as TableSkeleton } from './Skeletons';
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -18,8 +19,6 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
-
-
 
 import selectedSales from '../pages/sales';
 import { CsvBuilder } from 'filefy';
@@ -45,55 +44,52 @@ const tableIcons = {
 };
 
 const formatSelectedData = (selectedData, columns) => {
-  return selectedData.map((data) => {
+  return selectedData.map(data => {
     let dataKeys = Object.keys(data);
     let newData = [];
-    columns.map((column) => {
-      if (dataKeys.includes(column.field))
-        newData.push(data[`${column.field}`]);
-    })
+    columns.map(column => {
+      if (dataKeys.includes(column.field)) newData.push(data[`${column.field}`]);
+    });
     return newData;
-  })
-}
-
-
-
-
-
+  });
+};
 
 export default function MTable({ data, selectedData, columns, tprops }) {
-
   const exportAllSelectedRows = () => {
     new CsvBuilder(`Selected ${tprops.title} Rows File.csv`)
-      .setColumns(columns.map((column) => column.field))
+      .setColumns(columns.map(column => column.field))
       .addRows(formatSelectedData(selectedData, columns))
       .exportFile();
+  };
 
-  }
-
-
+  console.log(data);
   return (
-
-
-    <MaterialTable
-      title={tprops.title}
-      columns={columns}
-      data={data}
-      actions={[
-        {
-          icon: () => <SaveAlt />,
-          tooltip: "Export all selected rows",
-          onClick: () => exportAllSelectedRows()
-        }
-      ]}
-      editable={tprops.editable}
-      options={tprops.options}
-      components={tprops.components}
-      onRowClick={tprops.onRowClick}
-      onSelectionChange={tprops.onSelectionChange}
-      icons={tableIcons}
-    />
-
-
+    <>
+      {!data ? (
+        <TableSkeleton />
+      ) : (
+        <MaterialTable
+          title={tprops.title}
+          columns={columns}
+          data={data}
+          actions={[
+            {
+              icon: () => <SaveAlt />,
+              tooltip: 'Export all selected rows',
+              onClick: () => exportAllSelectedRows()
+            }
+          ]}
+          editable={tprops.editable}
+          options={{
+            ...tprops.options,
+            pageSizeOptions: [5, 10, 25, 50, 100]
+          }}
+          components={tprops.components}
+          onRowClick={tprops.onRowClick}
+          onSelectionChange={tprops.onSelectionChange}
+          icons={tableIcons}
+        />
+      )}
+    </>
   );
 }

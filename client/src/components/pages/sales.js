@@ -2,23 +2,31 @@ import React, { useState, useEffect, useCallback, useContext } from 'react';
 import MTable from '../ui/MTable';
 import queryString from 'query-string';
 import qs from 'qs';
+
+import Moment from 'react-moment';
 import { makeStyles } from '@material-ui/core/styles';
 import { useLocation } from 'react-router-dom';
 
 import AlertContext from '../../context/alert/alertContext';
 import SaleContext from '../../context/sale/saleContext';
-import { TablePagination, Grid, Typography, Divider, MuiThemeProvider, createMuiTheme, FormControlLabel, Switch } from '@material-ui/core';
+import {
+  TablePagination,
+  Grid,
+  Typography,
+  Divider,
+  MuiThemeProvider,
+  createMuiTheme,
+  FormControlLabel,
+  Switch
+} from '@material-ui/core';
 
 import 'date-fns';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
-  KeyboardDatePicker,
+  KeyboardDatePicker
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-
-
-
 
 const useStyles = makeStyles(theme => ({
   page: {
@@ -40,17 +48,16 @@ export default function Sales() {
   const [selectedDateFrom, setSelectedDateFrom] = React.useState(new Date('2014-08-18T21:11:54'));
   const [selectedDateTo, setSelectedDateTo] = React.useState(new Date());
 
-  const canBeObject = (value) => {
+  const canBeObject = value => {
     try {
       let val = JSON.parse(value);
       return val;
     } catch (err) {
       return false;
     }
-  }
+  };
 
-  const parseParams = (querystring) => {
-
+  const parseParams = querystring => {
     // parse query string
     const params = new URLSearchParams(querystring);
 
@@ -70,21 +77,18 @@ export default function Sales() {
 
   const [columns, setColumns] = useState([]);
   useEffect(() => {
-
-
     let query = {
       find: {
         'Last received date': {
           $gte: selectedDateFrom.toISOString(),
           $lte: selectedDateTo.toISOString(),
-          type: 'Date',
+          type: 'Date'
         }
-      },
+      }
     };
     const qsg = qs.stringify(query);
     GetSales(qsg);
     console.log(qsg);
-
   }, [selectedDateFrom, selectedDateTo]);
 
   const [selectedSales, setSelectedSales] = useState([]);
@@ -101,11 +105,11 @@ export default function Sales() {
               label="Start Date"
               format="dd/MM/yyyy"
               value={selectedDateFrom}
-              onChange={(date) => {
+              onChange={date => {
                 testingDates(date, 'From');
               }}
               KeyboardButtonProps={{
-                'aria-label': 'change date',
+                'aria-label': 'change date'
               }}
             />
             <KeyboardDatePicker
@@ -115,16 +119,17 @@ export default function Sales() {
               label="End Date"
               format="dd/MM/yyyy"
               value={selectedDateTo}
-              onChange={(date) => {
+              onChange={date => {
                 testingDates(date, 'To');
               }}
               KeyboardButtonProps={{
-                'aria-label': 'change date',
+                'aria-label': 'change date'
               }}
             />
           </Grid>
         </MuiPickersUtilsProvider>
-      </div>),
+      </div>
+    ),
     options: {
       actionsColumnIndex: -1,
       filtering: true,
@@ -134,18 +139,44 @@ export default function Sales() {
       columnsButton: true
     },
     components: {
-      Pagination: (props) => <>
-        <Grid container style={{ padding: 15 }}>
-          <Grid sm={2} item align="center"><Typography variant="subtitle2" ><b>Qty : {summary.qty}</b></Typography></Grid>
-          <Grid sm={2} item align="center"><Typography variant="subtitle2" ><b>ReceivedQty : {summary.receivedQty}</b></Typography></Grid>
-          <Grid sm={2} item align="center"><Typography variant="subtitle2" ><b>UnitCost : {summary.unitCost}</b></Typography></Grid>
-          <Grid sm={2} item align="center"><Typography variant="subtitle2" ><b>ReceivedUnitCost : {summary.receivedUnitCost}</b></Typography></Grid>
-          <Grid sm={2} item align="center"><Typography variant="subtitle2" ><b>Amount : {summary.amount}</b></Typography></Grid>
-          <Grid sm={2} item align="center"><Typography variant="subtitle2" ><b>ReceivedAmount : {summary.receivedAmount}</b></Typography></Grid>
-        </Grid>
-        <Divider />
-        <TablePagination {...props} />
-      </>
+      Pagination: props => (
+        <>
+          <Grid container style={{ padding: 15 }}>
+            <Grid sm={2} item align="center">
+              <Typography variant="subtitle2">
+                <b>Qty : {summary.qty}</b>
+              </Typography>
+            </Grid>
+            <Grid sm={2} item align="center">
+              <Typography variant="subtitle2">
+                <b>ReceivedQty : {summary.receivedQty}</b>
+              </Typography>
+            </Grid>
+            <Grid sm={2} item align="center">
+              <Typography variant="subtitle2">
+                <b>UnitCost : {summary.unitCost}</b>
+              </Typography>
+            </Grid>
+            <Grid sm={2} item align="center">
+              <Typography variant="subtitle2">
+                <b>ReceivedUnitCost : {summary.receivedUnitCost}</b>
+              </Typography>
+            </Grid>
+            <Grid sm={2} item align="center">
+              <Typography variant="subtitle2">
+                <b>Amount : {summary.amount}</b>
+              </Typography>
+            </Grid>
+            <Grid sm={2} item align="center">
+              <Typography variant="subtitle2">
+                <b>ReceivedAmount : {summary.receivedAmount}</b>
+              </Typography>
+            </Grid>
+          </Grid>
+          <Divider />
+          <TablePagination {...props} />
+        </>
+      )
     },
     onSelectionChange: rows => {
       console.log(this);
@@ -214,26 +245,19 @@ export default function Sales() {
   };
 
   const testingDates = (date, type) => {
-
-
     if (type == 'From') {
       if (date.getTime() < selectedDateTo.getTime()) {
         setSelectedDateFrom(date);
       }
-    }
-    else if (type == 'To') {
+    } else if (type == 'To') {
       if (date.getTime() > selectedDateFrom.getTime()) {
         setSelectedDateTo(date);
       }
     }
   };
 
-
   return (
     <div>
-
-
-
       <FormControlLabel
         value="top"
         control={<Switch color="primary" checked={preferDarkMode} />}
@@ -243,7 +267,7 @@ export default function Sales() {
       />
       <MuiThemeProvider theme={theme}>
         <MTable
-          data={sales ? sales : []}
+          data={sales}
           selectedData={selectedSales}
           columns={[
             {
@@ -298,7 +322,11 @@ export default function Sales() {
             },
             {
               title: 'Last received date',
-              field: 'Last received date'
+              field: 'Last received date',
+              type: 'date',
+              render: rowData => (
+                <Moment format="DD/MM/YYYY">{rowData['Last received date']}</Moment>
+              )
             },
             {
               title: 'ASIN received',
@@ -328,8 +356,6 @@ export default function Sales() {
       <button className="button button1" onClick={summarize}>
         Calculate
       </button>
-
-
-    </div >
+    </div>
   );
 }
