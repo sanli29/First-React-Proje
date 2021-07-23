@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import MTable from '../ui/MTable';
-
+import queryString from 'query-string';
+import qs from 'qs';
 import { makeStyles } from '@material-ui/core/styles';
 import { useLocation } from 'react-router-dom';
 
@@ -22,6 +23,9 @@ import DateFnsUtils from '@date-io/date-fns';
 const useStyles = makeStyles(theme => ({
   page: {
     padding: '1rem'
+  },
+  datePickers: {
+    padding: '5px'
   }
 }));
 
@@ -33,26 +37,94 @@ export default function Sales() {
   const { err, sales, clearErrors, GetSales, loading } = saleContext;
   const { search } = useLocation();
   const urlQuery = new URLSearchParams(search);
-  console.log('OV YEA', urlQuery.get('sa'));
-
   const [selectedDateFrom, setSelectedDateFrom] = React.useState(new Date('2014-08-18T21:11:54'));
   const [selectedDateTo, setSelectedDateTo] = React.useState(new Date());
 
+  const canBeObject = (value) => {
+    try {
+      let val = JSON.parse(value);
+      return val;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  const parseParams = (querystring) => {
+
+    // parse query string
+    const params = new URLSearchParams(querystring);
+
+    const obj = {};
+
+    // iterate over all keys
+    for (const key of params.keys()) {
+      if (params.getAll(key).length > 1) {
+        obj[key] = params.getAll(key);
+      } else {
+        obj[key] = params.get(key);
+      }
+    }
+
+    return obj;
+  };
 
   const [columns, setColumns] = useState([]);
   useEffect(() => {
-    GetSales({
-      'Last received date': {
-        gte: selectedDateFrom,
-        lt: selectedDateTo
-      }
-    });
+
+
+    let query = {
+      find: {
+        'Last received date': {
+          $gte: selectedDateFrom.toISOString(),
+          $lte: selectedDateTo.toISOString(),
+          type: 'Date',
+        }
+      },
+    };
+    const qsg = qs.stringify(query);
+    GetSales(qsg);
+    console.log(qsg);
+
   }, [selectedDateFrom, selectedDateTo]);
 
   const [selectedSales, setSelectedSales] = useState([]);
 
   const salesTableProps = {
-    title: 'Sales',
+    title: (
+      <div>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <Grid container justifyContent="space-around">
+            <KeyboardDatePicker
+              className={classes.datePickers}
+              margin="normal"
+              id="date-picker-dialog"
+              label="Start Date"
+              format="dd/MM/yyyy"
+              value={selectedDateFrom}
+              onChange={(date) => {
+                testingDates(date, 'From');
+              }}
+              KeyboardButtonProps={{
+                'aria-label': 'change date',
+              }}
+            />
+            <KeyboardDatePicker
+              className={classes.datePickers}
+              margin="normal"
+              id="date-picker-dialog"
+              label="End Date"
+              format="dd/MM/yyyy"
+              value={selectedDateTo}
+              onChange={(date) => {
+                testingDates(date, 'To');
+              }}
+              KeyboardButtonProps={{
+                'aria-label': 'change date',
+              }}
+            />
+          </Grid>
+        </MuiPickersUtilsProvider>
+      </div>),
     options: {
       actionsColumnIndex: -1,
       filtering: true,
@@ -141,37 +213,24 @@ export default function Sales() {
     calcSummary();
   };
 
+  const testingDates = (date, type) => {
+
+
+    if (type == 'From') {
+      if (date.getTime() < selectedDateTo.getTime()) {
+        setSelectedDateFrom(date);
+      }
+    }
+    else if (type == 'To') {
+      if (date.getTime() > selectedDateFrom.getTime()) {
+        setSelectedDateTo(date);
+      }
+    }
+  };
 
 
   return (
     <div>
-
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Grid container justifyContent="space-around">
-          <KeyboardDatePicker
-            margin="normal"
-            id="date-picker-dialog"
-            label="Date picker dialog"
-            format="dd/MM/yyyy"
-            value={selectedDateFrom}
-            onChange={(date) => setSelectedDateFrom(date)}
-            KeyboardButtonProps={{
-              'aria-label': 'change date',
-            }}
-          />
-          <KeyboardDatePicker
-            margin="normal"
-            id="date-picker-dialog"
-            label="Date picker dialog"
-            format="dd/MM/yyyy"
-            value={selectedDateTo}
-            onChange={(date) => setSelectedDateTo(date)}
-            KeyboardButtonProps={{
-              'aria-label': 'change date',
-            }}
-          />
-        </Grid>
-      </MuiPickersUtilsProvider>
 
 
 
@@ -271,6 +330,6 @@ export default function Sales() {
       </button>
 
 
-    </div>
+    </div >
   );
 }

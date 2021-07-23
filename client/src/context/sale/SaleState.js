@@ -21,7 +21,8 @@ const SaleState = props => {
     const GetSales = async (query) => {
 
         try {
-            const res = await axios.get('/api/sales');
+            const res = await axios.get(`/api/sales?${query}`);
+
 
             dispatch({
                 type: GET_SALES,

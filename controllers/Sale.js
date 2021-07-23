@@ -6,6 +6,7 @@ const getSales = (query = {}) => {
     return new Promise(async (resolve, reject) => {
         try {
 
+            console.log('bana gelen query', query);
             const sales = await Sale.find(query);
 
             resolve(sales);
