@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/9f970b52-5a49-49b6-9722-3218696c2c64/resourceGroups/NodeJsWebServer/providers/Microsoft.Web/sites/ottoangelino-sales",
+    "appService.deploySubpath": "."
+}
