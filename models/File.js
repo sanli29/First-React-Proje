@@ -6,7 +6,7 @@ const FileSchema = mongoose.Schema({
         required: true
     },
     extention: {
-        type: String, // dosya uzantısı,
+        type: String,
         required: true
     },
     data: [{
@@ -16,7 +16,6 @@ const FileSchema = mongoose.Schema({
     }],
     columns: {
         type: Object,
-        //required: true
     },
     type: {
         type: String
