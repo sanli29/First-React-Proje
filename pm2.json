@@ -1,0 +1,9 @@
+{
+  "apps": [
+    {
+      "name": "otto-angelino",
+      "script": "npm run dev",
+      "args": "start"
+    }
+  ]
+}
