@@ -2,7 +2,7 @@
   "apps": [
     {
       "name": "otto-angelino",
-      "script": "npm run dev",
+      "script": "npm run prod",
       "args": "start"
     }
   ]
