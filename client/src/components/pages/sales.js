@@ -28,6 +28,7 @@ import {
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
+// style
 const useStyles = makeStyles(theme => ({
   page: {
     padding: '1rem'
@@ -36,6 +37,7 @@ const useStyles = makeStyles(theme => ({
     padding: '5px'
   }
 }));
+
 
 export default function Sales() {
   const classes = useStyles();
