@@ -21,7 +21,7 @@
   "scripts": {
     "start": "node server.js",
     "server": "node server.js",
-    "test": "nodemon server.js",
+    "test": "node test.js",
     "client": "npm start --prefix client",
     "clientinstall": "npm install --prefix client",
     "dev": "concurrently \"npm run test\" \"npm run client\"",
