@@ -47,7 +47,7 @@ export default function Sales() {
   const { err, sales, clearErrors, GetSales, loading } = saleContext;
   const { search } = useLocation();
   const urlQuery = new URLSearchParams(search);
-  const [selectedDateFrom, setSelectedDateFrom] = React.useState(new Date('2014-08-18T21:11:54'));
+  const [selectedDateFrom, setSelectedDateFrom] = React.useState(new Date('2000-08-18T21:11:54'));
   const [selectedDateTo, setSelectedDateTo] = React.useState(new Date());
 
   const canBeObject = value => {
