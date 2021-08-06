@@ -17,6 +17,7 @@ import SaleState from './context/sale/SaleState';
 
 import PrivateRoute from './components/routing/PrivateRoute';
 import StyledDropzone from './components/pages/StyledDropzone';
+import HomePage from './components/pages/homePage';
 
 
 function Status({ code, children }) {
@@ -55,7 +56,7 @@ function App() {
                     <Messages />
                     <Switch>
                       <Route exact path='/login' component={Login} />
-
+                      <Route exact path='/' component={HomePage} />
                       <PrivateRoute exact path='/sales' component={Sales} />
                       <PrivateRoute exact path='/StyledDropzone' component={StyledDropzone} />
 
